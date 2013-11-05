@@ -44,23 +44,23 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Scripts\CustomTerrainScriptAtsV3Snow.cs" />
-     <Compile Include="Assets\Player\PlayerMover.cs" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\Ressources\ShadersBuiltin\Camera-DepthTexture.shader" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\BillboardTreeSnow.shader" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\Includes\atsWavingGrass vertexAlpha.cginc" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeCreatorBarkRendertexSnow.shader" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\atsV3WavingGrassBillboardSnow.shader" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\atsV3WavingGrassSnow vertexAlpha.shader" />
+     <Compile Include="Assets\3dsmax Bip Warrior Anim Free\Scripts\PlayGUI.cs" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\Ressources\ShadersBuiltin\Camera-DepthTexture.shader" />
+     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\BillboardTreeSnow.shader" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\Includes\atsWavingGrass vertexAlpha.cginc" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeCreatorBarkRendertexSnow.shader" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\atsV3WavingGrassBillboardSnow.shader" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\atsV3WavingGrassSnow vertexAlpha.shader" />
      <None Include="Assets\Standard Assets\Water (Basic)\Sources\Shaders\FX-Water Simple.shader" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeCreatorLeavesOptimizedSnow.shader" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\Tree.cginc" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeSnow.cginc" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\snowShaderBumpedDiffuse.shader" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\Ressources\ShadersBuiltin\Camera-DepthNormalTexture.shader" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\TerrainReplacementAtsV3Snow.shader" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeCreatorLeavesRendertexSnow.shader" />
-     <None Include="Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeCreatorBarkOptimizedSnow.shader" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeCreatorLeavesOptimizedSnow.shader" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\Tree.cginc" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeSnow.cginc" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\snowShaderBumpedDiffuse.shader" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\Ressources\ShadersBuiltin\Camera-DepthNormalTexture.shader" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\TerrainReplacementAtsV3Snow.shader" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeCreatorLeavesRendertexSnow.shader" />
+     <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeCreatorBarkOptimizedSnow.shader" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
