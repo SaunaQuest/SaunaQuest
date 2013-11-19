@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 
 Project("{F0FD0FB8-7DAC-E524-6C0A-8AD74E05F286}") = "SaunaQuest", "Assembly-CSharp-firstpass.csproj", "{FA7247B5-2E63-9303-7B99-8A14FBF2B713}"
 EndProject
+Project("{F0FD0FB8-7DAC-E524-6C0A-8AD74E05F286}") = "SaunaQuest", "Assembly-CSharp.csproj", "{77E69C12-CB19-2FE6-B145-CA4019543CD2}"
+EndProject
 Project("{F0FD0FB8-7DAC-E524-6C0A-8AD74E05F286}") = "SaunaQuest", "Assembly-UnityScript-firstpass.unityproj", "{D6A76535-3153-2385-EADC-1A78A77D2F8C}"
 EndProject
 Project("{F0FD0FB8-7DAC-E524-6C0A-8AD74E05F286}") = "SaunaQuest", "Assembly-UnityScript.unityproj", "{F70836CC-0BC1-2261-BA62-0128E01D0209}"
@@ -17,6 +19,10 @@ Global
 		{FA7247B5-2E63-9303-7B99-8A14FBF2B713}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA7247B5-2E63-9303-7B99-8A14FBF2B713}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA7247B5-2E63-9303-7B99-8A14FBF2B713}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77E69C12-CB19-2FE6-B145-CA4019543CD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77E69C12-CB19-2FE6-B145-CA4019543CD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77E69C12-CB19-2FE6-B145-CA4019543CD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77E69C12-CB19-2FE6-B145-CA4019543CD2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D6A76535-3153-2385-EADC-1A78A77D2F8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6A76535-3153-2385-EADC-1A78A77D2F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6A76535-3153-2385-EADC-1A78A77D2F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,7 +35,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																					GlobalSection(MonoDevelopProperties) = preSolution
+																															GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
