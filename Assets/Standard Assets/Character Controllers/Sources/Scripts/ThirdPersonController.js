@@ -6,12 +6,18 @@ public var idleAnimation : AnimationClip;
 public var walkAnimation : AnimationClip;
 public var runAnimation : AnimationClip;
 public var jumpPoseAnimation : AnimationClip;
+public var deadAnimation : AnimationClip;
 
 public var walkMaxAnimationSpeed : float = 0.75;
 public var trotMaxAnimationSpeed : float = 1.0;
 public var runMaxAnimationSpeed : float = 1.0;
 public var jumpAnimationSpeed : float = 1.15;
 public var landAnimationSpeed : float = 1.0;
+public var deadAnimationSpeed : float = 1.0;
+
+public var whiskyHeatAmount : float = 20.0;
+
+public var gameEnds : boolean = false;
 
 private var _animation : Animation;
 
@@ -21,6 +27,7 @@ enum CharacterState {
 	Trotting = 2,
 	Running = 3,
 	Jumping = 4,
+	Dead = 5
 }
 
 private var _characterState : CharacterState;
@@ -134,6 +141,10 @@ public var jumpPoseAnimation : AnimationClip;
 		_animation = null;
 		Debug.Log("No jump animation found and the character has canJump enabled. Turning off animations.");
 	}
+	if(!deadAnimation) {
+		_animation = null;
+		Debug.Log("No dead animation found. Turning off animations.");
+	}	
 			
 }
 
@@ -297,8 +308,6 @@ function ApplyGravity ()
 {
 	if (isControllable)	// don't move player at all if not controllable.
 	{
-		// Apply gravity
-		var jumpButton = Input.GetButton("Jump");
 		
 		
 		// When we reach the apex of the jump we send out a message
@@ -334,6 +343,14 @@ function DidJump ()
 }
 
 function Update() {
+	
+	if(gameEnds){
+		if (Input.GetButtonDown ("Jump"))
+		{
+			Application.LoadLevel("GameOnScene");
+		} 
+	}
+	
 	
 	if (!isControllable)
 	{
@@ -381,6 +398,10 @@ function Update() {
 	
 	// ANIMATION sector
 	if(_animation) {
+		if(_characterState == CharacterState.Dead){
+				_animation[jumpPoseAnimation.name].wrapMode = WrapMode.Once;	
+				_animation.CrossFade(deadAnimation.name);
+		 } 	
 		if(_characterState == CharacterState.Jumping) 
 		{
 			if(!jumpingReachedApex) {
@@ -520,19 +541,24 @@ function OnTriggerEnter(Hit : Collider)
 {
    if(Hit.name == "Mud") // you can compare tags instead: if (Hit.tag = "Player")
    {
-   		Debug.Log("Hit Mud");
  		walkSpeed /= 10; 
  		runSpeed /= 10;
    }
    if(Hit.name == "Ice") // you can compare tags instead: if (Hit.tag = "Player")
    {
-   		Debug.Log("Hit Ice");
-   		slipperyDirection = Vector3(Random.Range(10,15),0,Random.Range(10,15)); 
+   		slipperyDirection = Vector3(Random.Range(5,10),0,Random.Range(5,10)); 
    }       
    if(Hit.name == "Whisky") // you can compare tags instead: if (Hit.tag = "Player")
    {
-   		Debug.Log("Hit Whisky");
    		Destroy(Hit.gameObject);
+   		if(transform.GetComponent("HealthBarScript").curHealth+whiskyHeatAmount > 
+   		transform.GetComponent("HealthBarScript").maxHealth){
+   			transform.GetComponent("HealthBarScript").curHealth = 
+   			transform.GetComponent("HealthBarScript").maxHealth;
+   		}
+   		else{
+   			transform.GetComponent("HealthBarScript").curHealth += whiskyHeatAmount;
+   		}
    }       
 }
 
@@ -549,4 +575,22 @@ function OnTriggerExit(Hit : Collider)
    		slipperyDirection = Vector3.zero;    
    }       
 
+}
+
+function getCharacterState(){
+	return _characterState;
+}
+
+function setCharacterDead(){
+	_characterState=CharacterState.Dead;
+	walkSpeed = 0;
+	trotSpeed = 0;
+	runSpeed = 0;
+	gameEnds = true;
+	var text : String= "You have failed!!!\n";
+	text+= "\n";
+	text+= "Press space to retry again";
+	transform.GetComponent("GameOverDisplay").textToShow = text;
+	transform.GetComponent("GameOverDisplay").showText = true;
+	
 }

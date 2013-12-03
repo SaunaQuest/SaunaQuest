@@ -1,8 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../../../GAMES/028231/SaunaQuest/Assets/Compass.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Standard Assets\Character Controllers\Sources\Scripts\ThirdPersonController.js">
     <Files>
-      <File FileName="../../../GAMES/028231/SaunaQuest/Assets/Compass.cs" Line="17" Column="2" />
+      <File FileName="Assets\Scripts\GameStartScripts\DisplayKeyboardControls.cs" Line="12" Column="26" />
+      <File FileName="Assets\Scripts\GameOnScripts\HealthBarScript.cs" Line="37" Column="38" />
+      <File FileName="Assets\Standard Assets\Character Controllers\Sources\Scripts\ThirdPersonController.js" Line="350" Column="41" />
+      <File FileName="Assets\Scripts\GameOnScripts\GameOverDisplay.cs" Line="17" Column="36" />
+      <File FileName="Assets\Scripts\GameStartScripts\GameStartManager.cs" Line="14" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
