@@ -5,14 +5,11 @@ public class TimerDisplayScript : MonoBehaviour
 	private float currentTime;
 	private float restSeconds;
 	private int roundedRestSeconds;
-	private float displaySeconds;
-	private float displayMinutes;
-	public int startSeconds = 0;
+	public float displaySeconds;
+	public float displayMinutes;
 	string timetext;
-	public int initialfontSize = 30;
-	private bool fontSizeSet = false;
+	public bool runTimer = true;
 
- 
  
 // Use this for initialization
  
@@ -24,15 +21,11 @@ public class TimerDisplayScript : MonoBehaviour
 	}
  
 	void OnGUI ()
-	{
-		if (fontSizeSet == false) {
-			fontSizeSet = true;
-			GUI.skin.label.fontSize = initialfontSize;			
-		}
-		
-		
+	{		
 			
-		currentTime = Time.time;
+		if (runTimer) {
+			currentTime = Time.time;
+		}
 
  
 		roundedRestSeconds = Mathf.CeilToInt (currentTime);
@@ -47,5 +40,10 @@ public class TimerDisplayScript : MonoBehaviour
 		}
 		
 		GUI.Label (new Rect (600.0f, 0.0f, 100.0f, 75.0f), timetext);
+	}
+	
+	void disableTimer ()
+	{
+		runTimer = false;
 	}
 }

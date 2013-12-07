@@ -46,7 +46,6 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\GameOnScripts\AIScript.js" />
      <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\Ressources\ShadersBuiltin\Camera-DepthTexture.shader" />
-     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\BillboardTreeSnow.shader" />
      <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Terrain\Includes\atsWavingGrass vertexAlpha.cginc" />
      <None Include="Assets\Standard Assets\0000 terrain snow\atsV3 UnityTerrainSnow Package\Shaders\Trees\TreeCreatorBarkRendertexSnow.shader" />

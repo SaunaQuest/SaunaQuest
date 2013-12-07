@@ -42,19 +42,22 @@ public class HealthBarScript : MonoBehaviour
 				decreaseRate = runningDecreaseRate;
 			}		
 			decreasedHealth = Time.deltaTime * decreaseRate;
-			curHealth = curHealth - decreasedHealth;
+			if (curHealth - decreasedHealth >= 0) {
+				curHealth = curHealth - decreasedHealth;
+			} else {
+				curHealth = 0;
+			}
 			if (curHealth > 50) {
 				texture.SetPixel (1, 1, greenColor);
 			}
-			if (curHealth <50) {
+			if (curHealth < 50) {
 				texture.SetPixel (1, 1, yellowColor);
 			}
 			if (curHealth < 30) {
 				texture.SetPixel (1, 1, redColor);
 			}
-			if (curHealth < 0) {
-				controller.setCharacterDead (); //make him die
-				disableDecreaseRate = true;
+			if (curHealth == 0) {
+				controller.setCharacterDead ();
 			}
 		}
 	}
@@ -68,4 +71,16 @@ public class HealthBarScript : MonoBehaviour
 		GUI.Box (new Rect (10, 10, 500 * (curHealth / maxHealth), 20), new GUIContent (""), style);
 		GUI.Box (new Rect (10, 10, 500, 20), new GUIContent (curHealth.ToString ("F2")));
 	}
+	
+	public void disableHealthBar ()
+	{
+		disableDecreaseRate = true;	
+	}
+	
+	public void enableHealthBar ()
+	{
+		disableDecreaseRate = false;	
+	}
+	
+	
 }

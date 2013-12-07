@@ -17,6 +17,9 @@ public var deadAnimationSpeed : float = 1.0;
 
 public var whiskyHeatAmount : float = 20.0;
 
+private var applySlippery : boolean =false;
+private var applyMud : boolean = false;
+
 public var gameEnds : boolean = false;
 
 private var _animation : Animation;
@@ -33,11 +36,14 @@ enum CharacterState {
 private var _characterState : CharacterState;
 
 // The speed when walking
-var walkSpeed = 2.0;
+var walkSpeed = 50;
 // after trotAfterSeconds of walking we trot with trotSpeed
-var trotSpeed = 4.0;
+var trotSpeed = 50;
 // when pressing "Fire3" button (cmd) we start running
-var runSpeed = 6.0;
+var runSpeed = 90;
+var normalWalkSpeed = 50;
+var normalTrotSpeed = 50;
+var normalRunSpeed = 90;
 
 var inAirControlAcceleration = 3.0;
 
@@ -148,6 +154,153 @@ public var jumpPoseAnimation : AnimationClip;
 			
 }
 
+function Update() {
+	
+	if(gameEnds){
+		if (Input.GetButtonDown ("Jump"))
+		{
+			
+			Application.LoadLevel("GameOnScene");
+		} 
+	}
+	
+	
+	if (!isControllable)
+	{
+		// kill all inputs if not controllable.
+		Input.ResetInputAxes();
+	}
+	
+	if (Input.GetButtonDown ("Jump"))
+	{
+		lastJumpButtonTime = Time.time;
+	} 
+	
+	if(gameEnds){
+		walkSpeed=0;
+		trotSpeed=0;
+		runSpeed=0;
+	}
+	else if(applyMud){
+		walkSpeed = normalWalkSpeed/10;
+		trotSpeed = normalTrotSpeed/10;
+		runSpeed = normalRunSpeed/10;
+	}
+	else{
+		walkSpeed = normalWalkSpeed;
+		trotSpeed = normalTrotSpeed;
+		runSpeed = normalRunSpeed;
+	}
+	
+	//Apply Slide
+	ApplySlide();
+	
+	UpdateSmoothedMovementDirection();  
+ 
+	
+	// Apply gravity
+	// - extra power jump modifies gravity
+	// - controlledDescent mode modifies gravity
+	ApplyGravity ();
+
+	// Apply jumping logic
+	ApplyJumping ();
+	
+	var controller : CharacterController = GetComponent(CharacterController);	
+
+	// Calculate actual motion
+	
+	var movement;
+	if(!movingBack){
+		movement = moveDirection * moveSpeed + Vector3 (0, verticalSpeed, 0) + inAirVelocity + slideDirection*50;
+	}
+	else{
+		movement = -moveDirection* moveSpeed + Vector3 (0, verticalSpeed, 0) + inAirVelocity + slideDirection*50;
+	}
+	
+	movement *= Time.deltaTime;
+	
+	if(applySlippery && !applyMud){
+		slipperyDirection = moveDirection * Random.RandomRange(5,10);
+	}
+	else{
+		slipperyDirection = Vector3.zero;
+	}
+	collisionFlags = controller.Move(slipperyDirection*Time.deltaTime);
+	collisionFlags = controller.Move(movement);
+	
+	
+	
+	// ANIMATION sector
+	if(_animation) {
+		if(_characterState == CharacterState.Dead){
+				_animation[jumpPoseAnimation.name].wrapMode = WrapMode.Once;	
+				_animation.CrossFade(deadAnimation.name);
+		 } 	
+		if(_characterState == CharacterState.Jumping) 
+		{
+			if(!jumpingReachedApex) {
+				_animation[jumpPoseAnimation.name].speed = jumpAnimationSpeed;
+				_animation[jumpPoseAnimation.name].wrapMode = WrapMode.ClampForever;
+				_animation.CrossFade(jumpPoseAnimation.name);
+			} else {
+				_animation[jumpPoseAnimation.name].speed = -landAnimationSpeed;
+				_animation[jumpPoseAnimation.name].wrapMode = WrapMode.ClampForever;
+				_animation.CrossFade(jumpPoseAnimation.name);				
+			}
+		} 
+		else 
+		{
+			if(controller.velocity.sqrMagnitude < 0.1) {
+				_animation.CrossFade(idleAnimation.name);
+			}
+			else 
+			{
+				if(_characterState == CharacterState.Running) {
+					_animation[runAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, runMaxAnimationSpeed);
+					_animation.CrossFade(runAnimation.name);	
+				}
+				else if(_characterState == CharacterState.Trotting) {
+					_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, trotMaxAnimationSpeed);
+					_animation.CrossFade(walkAnimation.name);	
+				}
+				else if(_characterState == CharacterState.Walking) {
+					_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, walkMaxAnimationSpeed);
+					_animation.CrossFade(walkAnimation.name);	
+				}
+				
+			}
+		}
+	}
+	// ANIMATION sector
+	
+	// Set rotation to the move direction
+	if (IsGrounded())
+	{
+			transform.rotation = Quaternion.LookRotation(moveDirection);	
+	}	
+	else
+	{
+		var xzMove = movement;
+		xzMove.y = 0;
+		if (xzMove.sqrMagnitude > 0.001)
+		{
+			transform.rotation = Quaternion.LookRotation(xzMove);
+		}
+	}	
+	
+	// We are in jump mode but just became grounded
+	if (IsGrounded())
+	{
+		lastGroundedTime = Time.time;
+		inAirVelocity = Vector3.zero;
+		if (jumping)
+		{
+			jumping = false;
+			SendMessage("DidLand", SendMessageOptions.DontRequireReceiver);
+		}
+	}
+}
 
 function UpdateSmoothedMovementDirection ()
 {
@@ -342,130 +495,7 @@ function DidJump ()
 	_characterState = CharacterState.Jumping;
 }
 
-function Update() {
-	
-	if(gameEnds){
-		if (Input.GetButtonDown ("Jump"))
-		{
-			Application.LoadLevel("GameOnScene");
-		} 
-	}
-	
-	
-	if (!isControllable)
-	{
-		// kill all inputs if not controllable.
-		Input.ResetInputAxes();
-	}
-	
-	if (Input.GetButtonDown ("Jump"))
-	{
-		lastJumpButtonTime = Time.time;
-	} 
-	
-	//Apply Slide
-	ApplySlide();
-	
-	UpdateSmoothedMovementDirection();  
- 
-	
-	// Apply gravity
-	// - extra power jump modifies gravity
-	// - controlledDescent mode modifies gravity
-	ApplyGravity ();
 
-	// Apply jumping logic
-	ApplyJumping ();
-	
-	var controller : CharacterController = GetComponent(CharacterController);	
-
-	// Calculate actual motion
-	
-	var movement;
-	if(!movingBack){
-		movement = moveDirection * moveSpeed + Vector3 (0, verticalSpeed, 0) + inAirVelocity + slideDirection*50;
-	}
-	else{
-		movement = -moveDirection* moveSpeed + Vector3 (0, verticalSpeed, 0) + inAirVelocity + slideDirection*50;
-	}
-	
-	movement *= Time.deltaTime;
-	
-	collisionFlags = controller.Move(slipperyDirection*Time.deltaTime);
-	collisionFlags = controller.Move(movement);
-	
-	
-	
-	// ANIMATION sector
-	if(_animation) {
-		if(_characterState == CharacterState.Dead){
-				_animation[jumpPoseAnimation.name].wrapMode = WrapMode.Once;	
-				_animation.CrossFade(deadAnimation.name);
-		 } 	
-		if(_characterState == CharacterState.Jumping) 
-		{
-			if(!jumpingReachedApex) {
-				_animation[jumpPoseAnimation.name].speed = jumpAnimationSpeed;
-				_animation[jumpPoseAnimation.name].wrapMode = WrapMode.ClampForever;
-				_animation.CrossFade(jumpPoseAnimation.name);
-			} else {
-				_animation[jumpPoseAnimation.name].speed = -landAnimationSpeed;
-				_animation[jumpPoseAnimation.name].wrapMode = WrapMode.ClampForever;
-				_animation.CrossFade(jumpPoseAnimation.name);				
-			}
-		} 
-		else 
-		{
-			if(controller.velocity.sqrMagnitude < 0.1) {
-				_animation.CrossFade(idleAnimation.name);
-			}
-			else 
-			{
-				if(_characterState == CharacterState.Running) {
-					_animation[runAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, runMaxAnimationSpeed);
-					_animation.CrossFade(runAnimation.name);	
-				}
-				else if(_characterState == CharacterState.Trotting) {
-					_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, trotMaxAnimationSpeed);
-					_animation.CrossFade(walkAnimation.name);	
-				}
-				else if(_characterState == CharacterState.Walking) {
-					_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, walkMaxAnimationSpeed);
-					_animation.CrossFade(walkAnimation.name);	
-				}
-				
-			}
-		}
-	}
-	// ANIMATION sector
-	
-	// Set rotation to the move direction
-	if (IsGrounded())
-	{
-			transform.rotation = Quaternion.LookRotation(moveDirection);	
-	}	
-	else
-	{
-		var xzMove = movement;
-		xzMove.y = 0;
-		if (xzMove.sqrMagnitude > 0.001)
-		{
-			transform.rotation = Quaternion.LookRotation(xzMove);
-		}
-	}	
-	
-	// We are in jump mode but just became grounded
-	if (IsGrounded())
-	{
-		lastGroundedTime = Time.time;
-		inAirVelocity = Vector3.zero;
-		if (jumping)
-		{
-			jumping = false;
-			SendMessage("DidLand", SendMessageOptions.DontRequireReceiver);
-		}
-	}
-}
 
 function OnControllerColliderHit (hit : ControllerColliderHit )
 {
@@ -539,16 +569,19 @@ function OnCollisionExit(collision : Collision)
 
 function OnTriggerEnter(Hit : Collider)
 {
-   if(Hit.name == "Mud") // you can compare tags instead: if (Hit.tag = "Player")
+   if(Hit.name == "Mud")
    {
- 		walkSpeed /= 10; 
- 		runSpeed /= 10;
+ 		//walkSpeed /= 10; 
+ 		//runSpeed /= 10;
+ 		applyMud = true;
    }
-   if(Hit.name == "Ice") // you can compare tags instead: if (Hit.tag = "Player")
+   if(Hit.name == "Ice")
    {
-   		slipperyDirection = Vector3(Random.Range(5,10),0,Random.Range(5,10)); 
+   		applySlippery = true;
+   		//slipperyDirection = Vector3(Random.Range(5,10),0,Random.Range(5,10)); 
+   		slipperyDirection = moveDirection;
    }       
-   if(Hit.name == "Whisky") // you can compare tags instead: if (Hit.tag = "Player")
+   if(Hit.name == "Whisky")
    {
    		Destroy(Hit.gameObject);
    		if(transform.GetComponent("HealthBarScript").curHealth+whiskyHeatAmount > 
@@ -559,20 +592,28 @@ function OnTriggerEnter(Hit : Collider)
    		else{
    			transform.GetComponent("HealthBarScript").curHealth += whiskyHeatAmount;
    		}
-   }       
+   }
+   if(Hit.name == "Finish")
+   {
+   		transform.GetComponent("TimerDisplayScript").disableTimer();
+   		transform.GetComponent("HealthBarScript").disableHealthBar();
+   		setGameCompleted();
+   }
 }
 
 function OnTriggerExit(Hit : Collider)
 {
    if(Hit.name == "Mud")
    {
- 		walkSpeed *= 10;
- 		runSpeed *= 10;
+ 		//walkSpeed *= 10;
+ 		//runSpeed *= 10;
+ 		applyMud = false;
    }
    
    if(Hit.name == "Ice") // you can compare tags instead: if (Hit.tag = "Player")
    {
-   		slipperyDirection = Vector3.zero;    
+   		applySlippery=false;
+   		//slipperyDirection = Vector3.zero;    
    }       
 
 }
@@ -583,14 +624,25 @@ function getCharacterState(){
 
 function setCharacterDead(){
 	_characterState=CharacterState.Dead;
-	walkSpeed = 0;
-	trotSpeed = 0;
-	runSpeed = 0;
 	gameEnds = true;
 	var text : String= "You have failed!!!\n";
 	text+= "\n";
-	text+= "Press space to retry again";
+	text+= "Press space to retry again\n";
 	transform.GetComponent("GameOverDisplay").textToShow = text;
 	transform.GetComponent("GameOverDisplay").showText = true;
 	
+}
+
+function setGameCompleted(){
+	_characterState=CharacterState.Dead;
+	gameEnds = true;
+	var text : String= "Congratulations! You have completed the game!\n";
+	text+= "\n";
+	text+= "Your score is:";
+	var displayMinutes=transform.GetComponent("TimerDisplayScript").displayMinutes;
+	var displaySeconds=transform.GetComponent("TimerDisplayScript").displaySeconds;	
+	text+=displayMinutes+" minutes and "+displaySeconds+ " seconds\n";
+	text+= "Press space to retry again\n";	
+	transform.GetComponent("GameOverDisplay").textToShow = text;
+	transform.GetComponent("GameOverDisplay").showText = true;
 }
