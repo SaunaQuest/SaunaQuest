@@ -17,6 +17,9 @@ public class DisplayKeyboardControls : MonoBehaviour {
      	text += "D : turn right\n";
      	text += "Shift: run\n";
      	text += "Space: jump\n";
+		text += "To use items: left click the item with mouse\n";
+		text += "Boots make you able to run normally across mud\n";
+		text += "Jacket prevent you from getting cold\n";
      	text += "\n";
      	text += "Press Space to start game\n";
      	

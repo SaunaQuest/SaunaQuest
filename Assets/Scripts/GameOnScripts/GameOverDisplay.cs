@@ -13,7 +13,8 @@ public void OnGUI()
 	     	
 	     	GUIStyle style = new GUIStyle();
 	     	style.fontSize=Screen.width/50;
-	    	var textArea = new Rect(Screen.width/10,Screen.height/10,Screen.width, Screen.height);
+			style.normal.textColor = Color.yellow;
+	    	var textArea = new Rect(Screen.width/3,Screen.height/3,Screen.width, Screen.height);
 		    GUI.Label(textArea,textToShow,style);
 		}
 

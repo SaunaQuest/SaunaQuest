@@ -7,6 +7,8 @@ public var walkAnimation : AnimationClip;
 public var runAnimation : AnimationClip;
 public var jumpPoseAnimation : AnimationClip;
 public var deadAnimation : AnimationClip;
+public var punchAnimation : AnimationClip;
+
 
 public var walkMaxAnimationSpeed : float = 0.75;
 public var trotMaxAnimationSpeed : float = 1.0;
@@ -14,6 +16,7 @@ public var runMaxAnimationSpeed : float = 1.0;
 public var jumpAnimationSpeed : float = 1.15;
 public var landAnimationSpeed : float = 1.0;
 public var deadAnimationSpeed : float = 1.0;
+public var punchAnimationSpeed : float = 1.0;
 
 public var whiskyHeatAmount : float = 20.0;
 
@@ -30,7 +33,8 @@ enum CharacterState {
 	Trotting = 2,
 	Running = 3,
 	Jumping = 4,
-	Dead = 5
+	Dead = 5,
+	Punching = 6
 }
 
 private var _characterState : CharacterState;
@@ -125,12 +129,6 @@ function Awake ()
 	if(!_animation)
 		Debug.Log("The character you would like to control doesn't have animations. Moving her might look weird.");
 	
-	/*
-public var idleAnimation : AnimationClip;
-public var walkAnimation : AnimationClip;
-public var runAnimation : AnimationClip;
-public var jumpPoseAnimation : AnimationClip;	
-	*/
 	if(!idleAnimation) {
 		_animation = null;
 		Debug.Log("No idle animation found. Turning off animations.");
@@ -147,6 +145,11 @@ public var jumpPoseAnimation : AnimationClip;
 		_animation = null;
 		Debug.Log("No jump animation found and the character has canJump enabled. Turning off animations.");
 	}
+	if(!punchAnimation) {
+		_animation = null;
+		Debug.Log("No punch animation found. Turning off animations.");
+	}	
+			
 	if(!deadAnimation) {
 		_animation = null;
 		Debug.Log("No dead animation found. Turning off animations.");
@@ -163,7 +166,7 @@ function Update() {
 			Application.LoadLevel("GameOnScene");
 		} 
 	}
-	
+
 	
 	if (!isControllable)
 	{
@@ -176,12 +179,13 @@ function Update() {
 		lastJumpButtonTime = Time.time;
 	} 
 	
+	var bootsUsed : boolean = transform.GetComponent("EquipmentUsageScript").bootsUsed;	
 	if(gameEnds){
 		walkSpeed=0;
 		trotSpeed=0;
 		runSpeed=0;
 	}
-	else if(applyMud){
+	else if(applyMud && !bootsUsed){
 		walkSpeed = normalWalkSpeed/10;
 		trotSpeed = normalTrotSpeed/10;
 		runSpeed = normalRunSpeed/10;
@@ -195,8 +199,7 @@ function Update() {
 	//Apply Slide
 	ApplySlide();
 	
-	UpdateSmoothedMovementDirection();  
- 
+	UpdateSmoothedMovementDirection();   
 	
 	// Apply gravity
 	// - extra power jump modifies gravity
@@ -221,7 +224,7 @@ function Update() {
 	movement *= Time.deltaTime;
 	
 	if(applySlippery && !applyMud){
-		slipperyDirection = moveDirection * Random.RandomRange(5,10);
+		slipperyDirection = moveDirection * Random.Range(5,10);
 	}
 	else{
 		slipperyDirection = Vector3.zero;
@@ -237,7 +240,7 @@ function Update() {
 				_animation[jumpPoseAnimation.name].wrapMode = WrapMode.Once;	
 				_animation.CrossFade(deadAnimation.name);
 		 } 	
-		if(_characterState == CharacterState.Jumping) 
+		if(_characterState == CharacterState.Jumping)
 		{
 			if(!jumpingReachedApex) {
 				_animation[jumpPoseAnimation.name].speed = jumpAnimationSpeed;
@@ -251,11 +254,17 @@ function Update() {
 		} 
 		else 
 		{
-			if(controller.velocity.sqrMagnitude < 0.1) {
+			if(_characterState == CharacterState.Punching) {
+					_animation[punchAnimation.name].speed = punchAnimationSpeed;
+					_animation[punchAnimation.name].wrapMode = WrapMode.Once;
+					_animation.CrossFade(punchAnimation.name);	
+			}	
+			else if(controller.velocity.sqrMagnitude < 0.1 && _characterState!=CharacterState.Punching) {
 				_animation.CrossFade(idleAnimation.name);
 			}
-			else 
+			else 			
 			{
+		
 				if(_characterState == CharacterState.Running) {
 					_animation[runAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, runMaxAnimationSpeed);
 					_animation.CrossFade(runAnimation.name);	
@@ -275,19 +284,21 @@ function Update() {
 	// ANIMATION sector
 	
 	// Set rotation to the move direction
-	if (IsGrounded())
-	{
-			transform.rotation = Quaternion.LookRotation(moveDirection);	
-	}	
-	else
-	{
-		var xzMove = movement;
-		xzMove.y = 0;
-		if (xzMove.sqrMagnitude > 0.001)
+	if(!movingBack){
+		if (IsGrounded())
 		{
-			transform.rotation = Quaternion.LookRotation(xzMove);
-		}
-	}	
+				transform.rotation = Quaternion.LookRotation(moveDirection);	
+		}	
+		else
+		{
+			var xzMove = movement;
+			xzMove.y = 0;
+			if (xzMove.sqrMagnitude > 0.001)
+			{
+				transform.rotation = Quaternion.LookRotation(xzMove);
+			}
+		}	
+	}
 	
 	// We are in jump mode but just became grounded
 	if (IsGrounded())
@@ -372,8 +383,10 @@ function UpdateSmoothedMovementDirection ()
 	
 		_characterState = CharacterState.Idle;
 		
-		// Pick speed modifier
-		if (Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift))
+		if (Input.GetKey (KeyCode.LeftAlt) || Input.GetKey (KeyCode.RightAlt)){
+			//_characterState = CharacterState.Punching; remove punching state for now because no time to develop it
+		}
+		else if (Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift))
 		{
 			targetSpeed *= runSpeed;
 			_characterState = CharacterState.Running;
@@ -593,6 +606,18 @@ function OnTriggerEnter(Hit : Collider)
    			transform.GetComponent("HealthBarScript").curHealth += whiskyHeatAmount;
    		}
    }
+   if(Hit.name == "Boots")
+   {
+   		Destroy(Hit.gameObject);
+		transform.GetComponent("EquipmentScript").addBoots();
+
+   }   
+   if(Hit.name == "Jacket")
+   {
+   		Destroy(Hit.gameObject);
+		transform.GetComponent("EquipmentScript").addJacket();   		
+
+   }      
    if(Hit.name == "Finish")
    {
    		transform.GetComponent("TimerDisplayScript").disableTimer();
@@ -625,6 +650,8 @@ function getCharacterState(){
 function setCharacterDead(){
 	_characterState=CharacterState.Dead;
 	gameEnds = true;
+   	transform.GetComponent("TimerDisplayScript").disableTimer();
+   	transform.GetComponent("HealthBarScript").disableHealthBar();
 	var text : String= "You have failed!!!\n";
 	text+= "\n";
 	text+= "Press space to retry again\n";
@@ -645,4 +672,8 @@ function setGameCompleted(){
 	text+= "Press space to retry again\n";	
 	transform.GetComponent("GameOverDisplay").textToShow = text;
 	transform.GetComponent("GameOverDisplay").showText = true;
+}
+
+function attackedByEnemy(damagePerSecond){
+	transform.GetComponent("HealthBarScript").curHealth-=damagePerSecond*Time.deltaTime;
 }

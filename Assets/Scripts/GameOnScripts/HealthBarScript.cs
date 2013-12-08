@@ -16,6 +16,7 @@ public class HealthBarScript : MonoBehaviour
 	public float walkingDecreaseRate = 0.02f;
 	public float trottingDecreaseRate = 0.02f;
 	public float runningDecreaseRate = 0.1f;
+	public float jumpingDecreaseRate = 0.1f;	
 	private GameObject playerObject;
 	float decreasedHealth = 0;
 	bool disableDecreaseRate = false;
@@ -40,7 +41,14 @@ public class HealthBarScript : MonoBehaviour
 				decreaseRate = trottingDecreaseRate;
 			} else if (state == CharacterState.Running) {
 				decreaseRate = runningDecreaseRate;
-			}		
+			} else if (state == CharacterState.Jumping) {
+				decreaseRate = jumpingDecreaseRate;
+			}				
+			EquipmentUsageScript usage = (EquipmentUsageScript) transform.GetComponent("EquipmentUsageScript");
+			bool hasJacket = usage.jacketUsed;
+			if(hasJacket){
+				decreaseRate =0;	
+			}
 			decreasedHealth = Time.deltaTime * decreaseRate;
 			if (curHealth - decreasedHealth >= 0) {
 				curHealth = curHealth - decreasedHealth;
