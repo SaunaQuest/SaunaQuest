@@ -3,36 +3,87 @@ using System.Collections;
      
 public class HealthBarScript : MonoBehaviour
 {
-     
+	public enum mode
+	{
+		beginner,
+		intermediate,
+		expert
+	};
+	
+	public static mode playerLevel;
 	GUIStyle style = new GUIStyle ();
+	GUIStyle style1 = new GUIStyle ();
 	Texture2D texture;
 	Color redColor = Color.red;
-	Color greenColor = Color.green;
 	Color yellowColor = Color.yellow;
-	public float curHealth = 100;
-	public float maxHealth = 100;
+	static public float curHealth ;
+	static public float maxHealth;
 	public float decreaseRate = 0;
 	public float idleDecreaseRate = 0.005f;
 	public float walkingDecreaseRate = 0.02f;
 	public float trottingDecreaseRate = 0.02f;
 	public float runningDecreaseRate = 0.1f;
-	public float jumpingDecreaseRate = 0.1f;	
+	public float jumpingDecreaseRate = 0.1f;
 	private GameObject playerObject;
 	float decreasedHealth = 0;
 	bool disableDecreaseRate = false;
+	Color myGreen = new Color (0.0f, 0.4f, 0.0f);
      
 	void Start ()
 	{
+		
+		switch (playerLevel) {
+
+		case mode.beginner:
+			curHealth = 1000;
+			maxHealth = 1000;
+			break;
+		case mode.intermediate:
+			curHealth = 500;
+			maxHealth = 500;
+			break;
+		case mode.expert:
+			curHealth = 100;
+			maxHealth = 100;
+			break;
+		default:
+			curHealth = 100;
+			maxHealth = 100;
+			break;
+		}
+		decreaseRate = 0;
+		idleDecreaseRate = 0.005f;
+		walkingDecreaseRate = 0.02f;
+		trottingDecreaseRate = 0.02f;
+		runningDecreaseRate = 0.1f;
+		jumpingDecreaseRate = 0.1f;	
+		GameObject playerObject;
+		decreasedHealth = 0;
+		disableDecreaseRate = false;
+		Color myGreen = new Color (0.0f, 0.4f, 0.0f);
+		
+		
 		texture = new Texture2D (1, 1);
-		texture.SetPixel (1, 1, greenColor);
+		texture.SetPixel (1, 1, myGreen);
 	}
      
 	private void Update ()
-	{
-     
+	{	
+
+		if (Input.GetKey ("escape")) {
+			Application.Quit ();
+		}	
+		
+		ThirdPersonController controller = (ThirdPersonController)GetComponent ("ThirdPersonController");
+		CharacterState state = controller.getCharacterState ();
+		if (state == CharacterState.Dead) {
+			decreaseRate = 0;
+			disableHealthBar ();
+		}
 		if (!disableDecreaseRate) {
-			ThirdPersonController controller = (ThirdPersonController)GetComponent ("ThirdPersonController");
-			CharacterState state = controller.getCharacterState ();
+
+
+			
 			if (state == CharacterState.Idle) {
 				decreaseRate = idleDecreaseRate;
 			} else if (state == CharacterState.Walking) {
@@ -44,10 +95,10 @@ public class HealthBarScript : MonoBehaviour
 			} else if (state == CharacterState.Jumping) {
 				decreaseRate = jumpingDecreaseRate;
 			}				
-			EquipmentUsageScript usage = (EquipmentUsageScript) transform.GetComponent("EquipmentUsageScript");
+			EquipmentUsageScript usage = (EquipmentUsageScript)transform.GetComponent ("EquipmentUsageScript");
 			bool hasJacket = usage.jacketUsed;
-			if(hasJacket){
-				decreaseRate =0;	
+			if (hasJacket) {
+				decreaseRate = 0;	
 			}
 			decreasedHealth = Time.deltaTime * decreaseRate;
 			if (curHealth - decreasedHealth >= 0) {
@@ -56,7 +107,7 @@ public class HealthBarScript : MonoBehaviour
 				curHealth = 0;
 			}
 			if (curHealth > 50) {
-				texture.SetPixel (1, 1, greenColor);
+				texture.SetPixel (1, 1, myGreen);
 			}
 			if (curHealth < 50) {
 				texture.SetPixel (1, 1, yellowColor);
@@ -74,10 +125,13 @@ public class HealthBarScript : MonoBehaviour
 	{
      
 		texture.Apply ();
+		style1.fontSize = 36;
      	
 		style.normal.background = texture;
-		GUI.Box (new Rect (10, 10, 500 * (curHealth / maxHealth), 20), new GUIContent (""), style);
-		GUI.Box (new Rect (10, 10, 500, 20), new GUIContent (curHealth.ToString ("F2")));
+		if (!disableDecreaseRate) {
+			GUI.Box (new Rect (10, 10, 500 * (curHealth / maxHealth), 40), new GUIContent (""), style);
+			GUI.Box (new Rect (10, 10, 500, 40), new GUIContent (curHealth.ToString ("F2")), style1);
+		}
 	}
 	
 	public void disableHealthBar ()

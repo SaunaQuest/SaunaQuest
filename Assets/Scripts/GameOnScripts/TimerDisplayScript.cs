@@ -40,7 +40,7 @@ public class TimerDisplayScript : MonoBehaviour
 			timetext = timetext + "0" + displaySeconds.ToString ();
 		}
 
-		GUI.Label (new Rect (600.0f, 0.0f, 100.0f, 75.0f), timetext, style);
+		GUI.Label (new Rect (600.0f, 10.0f, 100.0f, 75.0f), timetext, style);
 	}
 	
 	void disableTimer ()

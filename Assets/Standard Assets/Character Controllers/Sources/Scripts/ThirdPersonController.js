@@ -654,7 +654,7 @@ function setCharacterDead(){
    	transform.GetComponent("HealthBarScript").disableHealthBar();
 	var text : String= "You have failed!!!\n";
 	text+= "\n";
-	text+= "Press space to retry again\n";
+	text+= "Press space to play again or escape to quit\n";
 	transform.GetComponent("GameOverDisplay").textToShow = text;
 	transform.GetComponent("GameOverDisplay").showText = true;
 	
@@ -669,7 +669,7 @@ function setGameCompleted(){
 	var displayMinutes=transform.GetComponent("TimerDisplayScript").displayMinutes;
 	var displaySeconds=transform.GetComponent("TimerDisplayScript").displaySeconds;	
 	text+=displayMinutes+" minutes and "+displaySeconds+ " seconds\n";
-	text+= "Press space to retry again\n";	
+	text+= "Press space to play again or escape to quit\n";	
 	transform.GetComponent("GameOverDisplay").textToShow = text;
 	transform.GetComponent("GameOverDisplay").showText = true;
 }

@@ -14,53 +14,61 @@ public class Compass : MonoBehaviour {
     private Transform myTransform;
     public int facingDir;
     public int degreeOffset;
+	GUIStyle style = new GUIStyle();
+
  
     void Start () {
-       myTransform = transform;
+       	myTransform = transform;
+
     }
  
     // Minor adjustments from 0,90,180,270 due to Font width
     // Adjust letter offset to match your Font size/width
  
     void OnGUI() {
+
+		style.normal.textColor = Color.yellow;
+		GUI.backgroundColor = Color.black;
+
+		style.fontSize = 30;
  
        if(degreeOffset > -85 && degreeOffset < 90) {
          GUI.Label( new Rect((Screen.width/2)-degreeOffset*2,
          (Screen.height)-50,
          180,
-         25),
-         "N");
+         50),
+         "N",style);
        }
  
        if(degreeOffset > 5 && degreeOffset < 180) {
          GUI.Label( new Rect((Screen.width/2)-degreeOffset*2+180,
          (Screen.height)-50,
          180,
-         25),
-         "E");
+         50),
+         "E",style);
        } 
  
        if((facingDir > 95 && degreeOffset> 95) || (facingDir < 276 && degreeOffset < -90)) {
          GUI.Label( new Rect((Screen.width/2)-facingDir*2+360,
          (Screen.height)-50,
          180,
-         25),
-         "S");    
+         50),
+         "S",style);    
        }
  
        if((facingDir > 186 && degreeOffset < -5)) {
          GUI.Label( new Rect((Screen.width/2)-facingDir*2+540,
          (Screen.height)-50,
          180,
-         25),
-         "W");
+         50),
+         "W",style);
        }
  
-       GUI.Box( new Rect((Screen.width/2)-180,
-         (Screen.height)-65,
+       GUI.Box( new Rect((Screen.width/2)-90,
+         (Screen.height)-75,
          360,
-         35),
-         "Heading");
+         60),
+         "Heading",style);
     }
  
     void Update () {

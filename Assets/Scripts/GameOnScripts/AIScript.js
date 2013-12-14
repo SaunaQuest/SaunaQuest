@@ -65,11 +65,17 @@ function move() {
 }
 
 function attack(){
+//Play an instance using attached AudioSource component
+ audio.Play();
+ 
 	var enemyRenderer = transform.GetComponentInChildren.<Renderer>();
 	enemyRenderer.material.color = Color.red;
+
+
+ 
 	targetChar.GetComponent("ThirdPersonController").attackedByEnemy(damagePerSecond);
 }
-
+ 
 function ApplyGravity ()
 {
 		if (IsGrounded ())
