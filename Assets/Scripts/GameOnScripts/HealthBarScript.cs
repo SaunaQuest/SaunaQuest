@@ -6,18 +6,18 @@ public class HealthBarScript : MonoBehaviour
 	public enum mode
 	{
 		beginner,
-		intermediate,
+		normal,
 		expert
 	};
 	
-	public static mode playerLevel;
+	public static mode playerLevel = mode.normal;
 	GUIStyle style = new GUIStyle ();
 	GUIStyle style1 = new GUIStyle ();
 	Texture2D texture;
 	Color redColor = Color.red;
 	Color yellowColor = Color.yellow;
-	static public float curHealth = 100;
-	static public float maxHealth = 100;
+	static public float curHealth ;
+	static public float maxHealth ;
 	public float decreaseRate = 0;
 	public float idleDecreaseRate = 0.05f;
 	public float walkingDecreaseRate = 0.2f;
@@ -35,16 +35,16 @@ public class HealthBarScript : MonoBehaviour
 		switch (playerLevel) {
 
 		case mode.beginner:
-			curHealth = 1000;
-			maxHealth = 1000;
+			curHealth = 200;
+			maxHealth = 200;
 			break;
-		case mode.intermediate:
-			curHealth = 500;
-			maxHealth = 500;
-			break;
-		case mode.expert:
+		case mode.normal:
 			curHealth = 100;
 			maxHealth = 100;
+			break;
+		case mode.expert:
+			curHealth = 50;
+			maxHealth = 50;
 			break;
 		default:
 			curHealth = 100;
@@ -57,7 +57,7 @@ public class HealthBarScript : MonoBehaviour
 		trottingDecreaseRate = 0.2f;
 		runningDecreaseRate = 1.0f;
 		jumpingDecreaseRate = 1.0f;	
-		GameObject playerObject;
+
 		decreasedHealth = 0;
 		disableDecreaseRate = false;
 		Color myGreen = new Color (0.0f, 0.4f, 0.0f);
@@ -128,6 +128,7 @@ public class HealthBarScript : MonoBehaviour
 		style1.fontSize = 36;
      	
 		style.normal.background = texture;
+		style1.normal.textColor = Color.white;
 		if (!disableDecreaseRate) {
 			GUI.Box (new Rect (10, 10, 500 * (curHealth / maxHealth), 40), new GUIContent (""), style);
 			GUI.Box (new Rect (10, 10, 500, 40), new GUIContent (curHealth.ToString ("F2")), style1);
