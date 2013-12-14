@@ -9,6 +9,7 @@ public class GameStartManager : MonoBehaviour
 	void Update ()
 
 	{   
+		HealthBarScript.playerLevel = HealthBarScript.mode.expert;
 		if (Input.GetKeyDown ("e"))
 		{
 			HealthBarScript.playerLevel = HealthBarScript.mode.expert;

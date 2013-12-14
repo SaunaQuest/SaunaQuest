@@ -58,7 +58,7 @@ var jumpHeight = 0.5;
 var gravity = 20.0;
 // The gravity in controlled descent mode
 var speedSmoothing = 10.0;
-var rotateSpeed = 100.0;
+var rotateSpeed = 1.0;
 var trotAfterSeconds = 3.0;
 
 var canJump = true;

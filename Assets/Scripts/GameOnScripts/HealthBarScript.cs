@@ -16,12 +16,12 @@ public class HealthBarScript : MonoBehaviour
 	Texture2D texture;
 	Color redColor = Color.red;
 	Color yellowColor = Color.yellow;
-	static public float curHealth ;
-	static public float maxHealth;
+	static public float curHealth = 100;
+	static public float maxHealth = 100;
 	public float decreaseRate = 0;
-	public float idleDecreaseRate = 0.005f;
-	public float walkingDecreaseRate = 0.02f;
-	public float trottingDecreaseRate = 0.02f;
+	public float idleDecreaseRate = 0.05f;
+	public float walkingDecreaseRate = 0.2f;
+	public float trottingDecreaseRate = 0.2f;
 	public float runningDecreaseRate = 0.1f;
 	public float jumpingDecreaseRate = 0.1f;
 	private GameObject playerObject;
@@ -52,11 +52,11 @@ public class HealthBarScript : MonoBehaviour
 			break;
 		}
 		decreaseRate = 0;
-		idleDecreaseRate = 0.005f;
-		walkingDecreaseRate = 0.02f;
-		trottingDecreaseRate = 0.02f;
-		runningDecreaseRate = 0.1f;
-		jumpingDecreaseRate = 0.1f;	
+		idleDecreaseRate = 0.05f;
+		walkingDecreaseRate = 0.2f;
+		trottingDecreaseRate = 0.2f;
+		runningDecreaseRate = 1.0f;
+		jumpingDecreaseRate = 1.0f;	
 		GameObject playerObject;
 		decreasedHealth = 0;
 		disableDecreaseRate = false;

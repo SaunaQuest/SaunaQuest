@@ -1,21 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Standard Assets/Character Controllers/Sources/Scripts/ThirdPersonController.js">
-    <Files>
-      <File FileName="Assets/Scripts/GameOnScripts/Compass.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/GameStartScripts/DisplayKeyboardControls.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/GameOnScripts/GameOverDisplay.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/GameOnScripts/EquipmentScript.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/GameOnScripts/EquipmentUsageScript.cs" Line="1" Column="1" />
-      <File FileName="Assets/Standard Assets/Character Controllers/Sources/Scripts/FPSInputController.js" Line="1" Column="1" />
-      <File FileName="Assets/Standard Assets/Character Controllers/Sources/Scripts/ThirdPersonController.js" Line="1" Column="1" />
-      <File FileName="Assets/Standard Assets/Character Controllers/Sources/Scripts/CharacterMotor.js" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/GameOnScripts/AIScript.js" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/GameOnScripts/Footsteps.js" Line="1" Column="1" />
-      <File FileName="Assets/Standard Assets/Character Controllers/Sources/Scripts/PlatformInputController.js" Line="1" Column="1" />
-      <File FileName="Assets/Standard Assets/Character Controllers/Sources/Scripts/ThirdPersonCamera.js" Line="1" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
